@@ -3,7 +3,7 @@
 block_cipher = None
 
 
-a = Analysis(['RiiConnect24-DNS-Server.py'],
+a = Analysis(['DNS-Server.py'],
              pathex=[],
              binaries=[],
              datas=[],
@@ -23,10 +23,10 @@ exe = EXE(pyz,
           a.zipfiles,
           a.datas,
           [],
-          name='rc24-dns-server',
+          name='wiilink-dns-server',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,
           upx=True,
           runtime_tmpdir=None,
-          console=True , icon='riiconnect24.ico')
+          console=True , icon='logo.ico')

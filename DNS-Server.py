@@ -2,8 +2,8 @@
 # (c) 2019 Austin Burk/Sudomemo
 # All rights reserved
 
-# RiiConnect24 DNS Server v1.2
-# Created by Austin Burk/Sudomemo. Edited by KcrPL and Larsenv.
+# WiiLink DNS Server v2.0
+# Created by Austin Burk/Sudomemo. Edited by KcrPL, Larsenv and Isla.
 
 from datetime import datetime
 from time import sleep
@@ -29,7 +29,7 @@ def get_platform():
 
     return platforms[sys.platform]
 
-RIICONNECT24DNSSERVER_VERSION = "1.2"
+DNSSERVER_VERSION = "2.0"
 
 def get_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -48,20 +48,17 @@ SERIAL = int((datetime.utcnow() - EPOCH).total_seconds())
 MY_IP = get_ip()
 
 print("+===============================+")
-print("|    RiiConnect24 DNS Server    |")
-print("|          Version " + RIICONNECT24DNSSERVER_VERSION + "          |")
+print("|       WiiLink DNS Server      |")
+print("|          Version " + DNSSERVER_VERSION + "          |")
 print("+===============================+\n")
 
-print("Hello! This server will allow you to connect to RiiConnect24 when your Internet Service Provider does not work with custom DNS.")
-
-print("This tool will help you avoid error 107304 in the Forecast/News Channel. When you use the DNS on your Wii / DS or with this app, it also enhances the use of services such as Wiimmfi. This tool can also be used as a DNS server for Nintendo DS games.\n")
+print("Hello! This server will allow you to use additional WiiLink services when your ISP blocks custom DNS.")
 
 
 print("#### How To Use ####\n")
-print("The setup process does not differ from what is shown at https://wii.guide/riiconnect24 except for the values to enter in your custom DNS settings.")
 print("First, make sure that your Wii / DS is connected to the same network as this computer.")
 
-print("\nHere are the settings you need to type in on your Wii in the DNS section.:\n")
+print("\nHere are the settings you need to type in on your console in the DNS section.:\n")
 print(":---------------------------:")
 print("  Primary DNS:  ",MY_IP  )
 print("  Secondary DNS: 1.1.1.1")
@@ -70,7 +67,7 @@ print(":---------------------------:")
 print("\nAll other settings should match what is shown at the above URL.\n")
 
 print("#### Getting Help ####\n")
-print("Need help? Visit our Discord server https://discord.gg/b4Y7jfD or contact us at support@riiconnect24.net\n")
+print("Need help? Join our Discord server at https://discord.gg/wiilink or use our forums at https://forum.wiilink.ca\n")
 
 print("--- Starting up ---")
 
@@ -86,7 +83,7 @@ TYPE_LOOKUP = {
 
 # Can't seem to turn off DNSLogger with a None type so let's just null it out with a dummy function
 
-class RiiConnect24DNSLogger(object):
+class DNSLogger(object):
     def log_recv(self, handler, data):
         pass
     def log_send(self, handler, data):
@@ -96,7 +93,7 @@ class RiiConnect24DNSLogger(object):
     def log_reply(self, handler, reply):
         print("[DNS] {" + datetime.now().strftime('%H:%M:%S') + "} Sent    : DNS Response to:  " + handler.client_address[0])
     def log_error(self, handler, e):
-        logger.error("[INFO] {" + datetime.now().strftime('%H:%M:%S') + "} Invalid DNS request from " + handler.client_address[0])
+        print("[INFO] {" + datetime.now().strftime('%H:%M:%S') + "} Invalid DNS request from " + handler.client_address[0])
     def log_truncated(self, handler, reply):
         pass
     def log_data(self, dnsobj):
@@ -155,7 +152,7 @@ class Record:
 ZONES = {}
 
 try:
-  get_zones = requests.get("https://raw.githubusercontent.com/RiiConnect24/DNS-Server/master/dns_zones.json")
+  get_zones = requests.get("https://raw.githubusercontent.com/WiiLink24/DNS-Server/master/dns_zones.json")
 except requests.exceptions.Timeout:
   print("[ERROR] Couldn't load DNS data: connection to GitHub timed out.")
   print("[ERROR] Are you connected to the Internet?")
@@ -212,7 +209,7 @@ class Resolver:
 
 
 resolver = Resolver()
-dnsLogger = RiiConnect24DNSLogger()
+dnsLogger = DNSLogger()
 
 print("[INFO] Detected operating system:", get_platform());
 
@@ -225,7 +222,7 @@ elif get_platform() == 'OS X':
   print("[INFO] If you aren't seeing any requests, check that this is the case first with lsof -i:53 (requires lsof)")
   print("[INFO] To run as root, prefix the command with 'sudo'")
 elif get_platform() == 'Windows':
-  print("[INFO] Please note: If you see a notification about firewall, allow the application to work. If you're using 3rd party  firewall on your computer - you may want to - this program to your firewall and allow traffic.")
+  print("[INFO] Please note: If you see a notification about firewall, allow the application to work. If you're using a 3rd party firewall on your computer, you may need to allow this program through your firewall.")
 
 try:
   servers = [
@@ -237,7 +234,7 @@ except PermissionError:
   sys.exit(1)
 
 print("-- Done --- \n")
-print("[INFO] Starting RiiConnect24 DNS server.")
+print("[INFO] Starting WiiLink DNS server.")
 print("[INFO] Ready. Waiting for your Wii / DS to send DNS Requests...\n")
 
 if __name__ == '__main__':
