@@ -1,6 +1,6 @@
 name: Build
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   Build:
@@ -11,17 +11,17 @@ jobs:
 
     steps:
     - name: Obtain latest version of the repository
-      uses: actions/checkout@v1
+      uses: actions/checkout@v4
     - name: Set up Python 3
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v5
       with:
-        python-version: '3.x'
+        python-version: '3.12'
     - name: Install requirements with PIP
       run: pip install dnslib requests pyinstaller
     - name: Build DNS-Server
       run: pyinstaller --onefile DNS-Server.spec
     - name: Publish Build Artifacts
-      uses: actions/upload-artifact@master
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ matrix.os }}
         path: dist
