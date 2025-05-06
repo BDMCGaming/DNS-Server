@@ -5,7 +5,7 @@
 # WiiLink DNS Server v2.0
 # Created by Austin Burk/Sudomemo. Edited by KcrPL, Larsenv and Isla.
 
-from datetime import datetime
+from datetime import datetime, timezone
 from time import sleep
 
 from dnslib import DNSLabel, QTYPE, RD, RR
@@ -43,8 +43,7 @@ def get_ip():
         s.close()
     return IP
 
-EPOCH = datetime(1970, 1, 1)
-SERIAL = int((datetime.utcnow() - EPOCH).total_seconds())
+SERIAL = int(datetime.now(timezone.utc).timestamp())
 MY_IP = get_ip()
 
 print("+===============================+")
@@ -200,10 +199,7 @@ class Resolver:
                         found = True
                         break
             if not found:
-                if "nintendowifi.net" in str(request.q.qname):
-                    reply.add_answer(RR(str(request.q.qname),QTYPE.A,rdata=A("95.217.77.151"),ttl=60))
-                else:
-                    reply.add_answer(RR(str(request.q.qname),QTYPE.A,rdata=A(socket.gethostbyname_ex(str(request.q.qname))[2][0]),ttl=60))
+                reply.add_answer(RR(str(request.q.qname),QTYPE.A,rdata=A(socket.gethostbyname_ex(str(request.q.qname))[2][0]),ttl=60))
 
         return reply
 
