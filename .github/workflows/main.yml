@@ -17,9 +17,11 @@ jobs:
       with:
         python-version: '3.12'
     - name: Install requirements with PIP
-      run: pip install dnslib requests pyinstaller
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
     - name: Build DNS-Server
-      run: pyinstaller --onefile DNS-Server.spec
+      run: pyinstaller DNS-Server.spec
     - name: Publish Build Artifacts
       uses: actions/upload-artifact@v4
       with:
