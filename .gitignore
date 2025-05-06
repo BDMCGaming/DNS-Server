@@ -1,2 +1,4 @@
 .venv
 dnsmasq.conf
+build/
+dist/
